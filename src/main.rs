@@ -1,5 +1,12 @@
-use tokio::net::TcpListener;
-use tokio::io::{AsyncReadExt, AsyncWriteExt}; // tokio: runtime for writing reliable, asynchronous applications in Rust
+mod cli;
+
+
+
+fn main() {
+
+}
+
+
 
 // // A basic TCP echo server with Tokio 
 // #[tokio::main]
@@ -34,9 +41,7 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt}; // tokio: runtime for writing reli
 //     }
 // }
 
-fn main() {
 
-}
 
 
 //repeating code for any number of inputs using macro_rules!

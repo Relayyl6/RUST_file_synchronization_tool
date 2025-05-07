@@ -46,90 +46,92 @@ ref:
 
 
 Key Relationships:
-FileSync orchestrates the main workflow
-SyncEngine manages core sync logic
-FileIndex tracks file states
-FileWatcher monitors filesystem changes
-ConflictHandler resolves sync conflicts
-NetworkClient handles remote transfers
+1. FileSync orchestrates the main workflow
+2. SyncEngine manages core sync logic
+3. FileIndex tracks file states
+4. FileWatcher monitors filesystem changes
+5. ConflictHandler resolves sync conflicts
+6. NetworkClient handles remote transfers
 
 
 
 ### Flowchart Diagram
- 
-┌───────────────────────┐
-│      Start Sync       │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Parse CLI Arguments  │
-│   & Load Config       │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│ Validate Paths &      │
-│  Permissions          │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│ Initial Directory Scan│
-│  Build File Index     │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│ Start File Watcher    │
-│  (for real-time sync) │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Compare Directories  │
-│  (Source vs Target)   │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Detect Changes &     │
-│  Conflicts            │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Resolve Conflicts    │
-│  (Apply Strategies)   │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Execute File         │
-│  Operations:          │
-│  - Copy               │
-│  - Update             │
-│  - Delete             │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Verify Transfers     │
-│  (Checksum Check)     │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Update File Index    │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Log Results &        │
-│  Statistics           │
-└──────────┬────────────┘
-           ↓
-┌───────────────────────┐
-│  Wait for Next        │
-│  Sync Cycle or        │
-│  Real-time Event      │
-└──────────┬────────────┘
-           ↓
-           ├───────────────────┐
-           ↓                   │
-┌───────────────────────┐      │
-│   Shutdown on         │      │
-│   Termination Signal  │◄─────┘
-└───────────────────────┘
+
+```
+    ┌───────────────────────┐
+    │      Start Sync       │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Parse CLI Arguments  │
+    │   & Load Config       │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │ Validate Paths &      │
+    │  Permissions          │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │ Initial Directory Scan│
+    │  Build File Index     │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │ Start File Watcher    │
+    │  (for real-time sync) │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Compare Directories  │
+    │  (Source vs Target)   │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Detect Changes &     │
+    │  Conflicts            │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Resolve Conflicts    │
+    │  (Apply Strategies)   │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Execute File         │
+    │  Operations:          │
+    │  - Copy               │
+    │  - Update             │
+    │  - Delete             │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Verify Transfers     │
+    │  (Checksum Check)     │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Update File Index    │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Log Results &        │
+    │  Statistics           │
+    └──────────┬────────────┘
+               ↓
+    ┌───────────────────────┐
+    │  Wait for Next        │
+    │  Sync Cycle or        │
+    │  Real-time Event      │
+    └──────────┬────────────┘
+               ↓
+               ├────────────────┐
+               ↓                │
+    ┌───────────────────────┐   │
+    │   Shutdown on         │   │
+    │   Termination Signal  │◄──┘
+    └───────────────────────┘
+```
 
 ref:
 ![Flowchart Diagram](assets/flowchart.png "Workflow Diagram")
@@ -137,25 +139,26 @@ ref:
 
 
 
-Key Components Explained:
-Initialization Flow:
-    CLI/config → validation → initial scan
-    Sets up the initial state before syncing
+### Key Components Explained:
 
-Core Sync Loop:
-    Compare → detect changes → resolve conflicts → execute ops
-    Runs continuously for real-time sync or once for batch sync
+1. Initialization Flow:
+    -CLI/config → validation → initial scan
+    -Sets up the initial state before syncing
 
-Conflict Resolution:
-    Checks modification times, sizes, hashes
-    Applies configured resolution strategy
+2. Core Sync Loop:
+    -Compare → detect changes → resolve conflicts → execute ops
+    -Runs continuously for real-time sync or once for batch sync
 
-File Operations:
+3. Conflict Resolution:
+    -Checks modification times, sizes, hashes
+    -Applies configured resolution strategy
+
+4. File Operations:
     Copy new/changed files
     Delete removed files (in mirror mode)
     Update metadata
 
-Network Sync Path:
+5. Network Sync Path:
     Additional verification steps
     Chunked transfers for large files
     Connection retry logic
