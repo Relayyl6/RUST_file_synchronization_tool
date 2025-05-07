@@ -6,6 +6,8 @@ clap: A simple to use, efficient, and full-featured Command Line Argument Parser
 
 ### Workflow Diagram
 
+
+```
 +---------------------+       +---------------------+       +---------------------+
 |      FileSync       |       |     SyncEngine      |       |    NetworkClient    |
 +---------------------+       +---------------------+       +---------------------+
@@ -40,6 +42,7 @@ clap: A simple to use, efficient, and full-featured Command Line Argument Parser
                                  | - path: Path        |
                                  | - event: EventType  |
                                  +---------------------+
+```
 
 ref:
 ![Workflow Diagram](assets/mermaid.png "Workflow Diagram")
@@ -79,48 +82,75 @@ Key Relationships:
                ↓
     ┌───────────────────────┐
     │ Start File Watcher    │
-    │  (for real-time sync) │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Compare Directories  │
-    │  (Source vs Target)   │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Detect Changes &     │
-    │  Conflicts            │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Resolve Conflicts    │
-    │  (Apply Strategies)   │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Execute File         │
-    │  Operations:          │
-    │  - Copy               │
-    │  - Update             │
-    │  - Delete             │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Verify Transfers     │
-    │  (Checksum Check)     │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Update File Index    │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Log Results &        │
-    │  Statistics           │
-    └──────────┬────────────┘
-               ↓
-    ┌───────────────────────┐
-    │  Wait for Next        │
+    │  (for real-time sync) │◄────────────────────|
+    └──────────┬────────────┘                     |              
+               ↓                                  |
+    ┌───────────────────────┐                     |
+    │  Compare Directories  │                     |
+    │  (Source vs Target)   │                     |
+    └──────────┬────────────┘                     |
+               ↓                                  |
+    ┌───────────────────────┐                     |
+    │  Detect Changes &     │                     |
+    │  Conflicts            │                     |
+    └──────────┬────────────┘                     |
+               |                                  |
+               |                                  |
+            /─────\                               |
+           /       \                              |
+          /         \                             |
+         /           \                            |
+        /  Conflicts? \                           |
+        \             /                           |
+         \           /                            |
+          \         /                             |
+      No ──\       /── Yes                        |
+       |    \─────/     |                         |
+       |                ↓                         |
+       |        ┌───────────────────────┐         |
+       |        │  Resolve Conflicts    │         |
+       |        │  (Apply Strategies)   │         |
+       |        └───────┬───────────────┘         |
+       ↓                ↓                         |
+    ┌───────────────────────┐                     |
+    │  Execute File         │                     |
+    │  Operations:          │                     |
+    │  - Copy               │                     |
+    │  - Update             │                     |
+    │  - Delete             │                     |
+    └──────────┬────────────┘                     |
+               ↓                                  |
+    ┌───────────────────────┐                     |
+    │  Verify Transfers     │                     |
+    │  (Checksum Check)     │                     |
+    └──────────┬────────────┘                     |
+               ↓                                  |
+    ┌───────────────────────┐                     |
+    │  Update File Index    │                     |
+    └──────────┬────────────┘                     |
+               ↓                                  |
+    ┌───────────────────────┐                     |
+    │  Log Results &        │                     |
+    │  Statistics           │                     |
+    └──────────┬────────────┘                     |
+               |                                  |
+               ↓                                  |
+            /─────\                               |
+           /       \                              |
+          /         \                             |
+         /           \                            |
+        / continuous  \                           |
+        \             /                           |
+         \           /                            |
+          \         /                             |
+           \       /─────────── Yes ──────────────|
+            \─────/              |
+               |                 |
+               No                |
+               |                 |
+               ↓                 |
+    ┌───────────────────────┐    |
+    │  Wait for Next        │────|
     │  Sync Cycle or        │
     │  Real-time Event      │
     └──────────┬────────────┘
@@ -133,8 +163,7 @@ Key Relationships:
     └───────────────────────┘
 ```
 
-ref:
-![Flowchart Diagram](assets/flowchart.png "Workflow Diagram")
+
 
 
 
