@@ -8,40 +8,40 @@ clap: A simple to use, efficient, and full-featured Command Line Argument Parser
 
 
 ```
-+---------------------+       +---------------------+       +---------------------+
-|      FileSync       |       |     SyncEngine      |       |    NetworkClient    |
-+---------------------+       +---------------------+       +---------------------+
-| - config: Config    |<>---->| - source: Path      |       | - remote_url: Url   |
-| - cli: Cli          |       | - target: Path      |       | - auth: AuthToken   |
-| - logger: Logger    |       | - mode: SyncMode    |       +---------------------+
-+---------------------+       | - watcher: Watcher  |               ^
-       |                      +---------------------+               |
-       |                                |                           |
-       v                                v                           |
-+---------------------+       +---------------------+       +---------------------+
-|       Config        |       |     FileIndex       |       |    ConflictHandler  |
-+---------------------+       +---------------------+       +---------------------+
-| - source: Path      |       | - files: HashMap    |       | - strategies: Vec   |
-| - target: Path      |       |   <Path, Metadata>  |       +---------------------+
-| - sync_mode: Mode   |       +---------------------+               ^
-| - ignore_hidden: bool|              ^                             |
-+---------------------+               |                             |
-                                      |                             |
-+---------------------+       +---------------------+       +---------------------+
-|      Metadata       |       |    FileWatcher      |       |    SyncStrategy     |
-+---------------------+       +---------------------+       +---------------------+
-| - path: Path        |       | - watched: Vec<Path>|       | - name: String      |
-| - size: u64         |       | - rx: Receiver      |       | - apply()           |
-| - modified: DateTime|       +---------------------+       +---------------------+
-| - hash: String      |                  ^
-+---------------------+                  |
-                                         |
-                                 +---------------------+
-                                 |    Notification     |
-                                 +---------------------+
-                                 | - path: Path        |
-                                 | - event: EventType  |
-                                 +---------------------+
+        +---------------------+       +---------------------+       +---------------------+
+        |      FileSync       |       |     SyncEngine      |       |    NetworkClient    |
+        +---------------------+       +---------------------+       +---------------------+
+        | - config: Config    |<>---->| - source: Path      |       | - remote_url: Url   |
+        | - cli: Cli          |       | - target: Path      |       | - auth: AuthToken   |
+        | - logger: Logger    |       | - mode: SyncMode    |       +---------------------+
+        +---------------------+       | - watcher: Watcher  |               ^
+            |                      +---------------------+                  |
+            |                                |                              |
+            v                                v                              |
+        +---------------------+       +---------------------+       +---------------------+
+        |       Config        |       |     FileIndex       |       |    ConflictHandler  |
+        +---------------------+       +---------------------+       +---------------------+
+        | - source: Path      |       | - files: HashMap    |       | - strategies: Vec   |
+        | - target: Path      |       |   <Path, Metadata>  |       +---------------------+
+        | - sync_mode: Mode   |       +---------------------+               ^
+        | - ignore_hidden: bool|              ^                             |
+        +---------------------+               |                             |
+                                              |                             |
+        +---------------------+       +---------------------+       +---------------------+
+        |      Metadata       |       |    FileWatcher      |       |    SyncStrategy     |
+        +---------------------+       +---------------------+       +---------------------+
+        | - path: Path        |       | - watched: Vec<Path>|       | - name: String      |
+        | - size: u64         |       | - rx: Receiver      |       | - apply()           |
+        | - modified: DateTime|       +---------------------+       +---------------------+
+        | - hash: String      |                  ^
+        +---------------------+                  |
+                                                 |
+                                        +---------------------+
+                                        |    Notification     |
+                                        +---------------------+
+                                        | - path: Path        |
+                                        | - event: EventType  |
+                                        +---------------------+
 ```
 
 ref:
